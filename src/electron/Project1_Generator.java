@@ -9,7 +9,7 @@ import electron.data.outFile;
 import electron.data.settings;
 
 public class Project1_Generator {
-
+	//v1
 	public static void main(String[] args) {
 		settings.load();
 		outFile.load();
