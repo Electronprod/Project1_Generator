@@ -1,6 +1,8 @@
 package electron.data;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,7 +13,12 @@ public class settings {
 	public static void load() {
 		FileIteractor.loadFile(confFile);
 	    if (FileIteractor.getFileLines(confFile.getPath().toString()).isEmpty()) {
-	    	messages.error("Вы должны заполнить файл settings.txt классами, \nкоторые должны быть добавлены в таблицу. \nФормат - каждая новая строка - название класса в порядке возврастания. \n Сейчас программа выключается.");
+	    	messages.error("You need to fill settings.txt file with classes names \nto add. Format: new line - classname (in ascending order) \n Now program shutting down.");
+	    	try {
+				Desktop.getDesktop().open(confFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	    	System.exit(0);
 	    }
 	}

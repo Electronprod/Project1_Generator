@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 
 import electron.data.outFile;
 import electron.data.settings;
+import electron.preview.PreviewServer;
 
 public class MainWindow extends JPanel {
     private JComboBox dayselectro;
@@ -44,7 +45,7 @@ public class MainWindow extends JPanel {
         addbtn = new JButton ("Add");
         removebtn = new JButton ("Remove");
         classselector = new JComboBox (classselectorItems);
-        updatebtn = new JButton ("Update");
+        updatebtn = new JButton ("Preview");
         lstime = new JLabel ("Lesson time:");
         lstimef = new JTextField (5);
         lsname = new JLabel ("Lesson name:");
@@ -113,8 +114,9 @@ public class MainWindow extends JPanel {
         updatebtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateList(dayselectroItems[dayselectro.getSelectedIndex()], classselectorItems[classselector.getSelectedIndex()]);
-                status.setText("Updated list");
+//                updateList(dayselectroItems[dayselectro.getSelectedIndex()], classselectorItems[classselector.getSelectedIndex()]);
+            	PreviewServer.showPreview();
+            	 status.setText("Showed preview");
             }});
         dayselectro.addActionListener(new ActionListener() {
             @Override
