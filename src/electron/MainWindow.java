@@ -23,6 +23,12 @@ public class MainWindow extends JPanel {
     private JButton removebtn;
     private JComboBox classselector;
     private JButton updatebtn;
+    private JLabel lstime;
+    private JTextField lstimef;
+    private JLabel lsname;
+    private JTextField lsnamef;
+    private JLabel tname;
+    private JTextField tnamef;
     
   //Window building
     public MainWindow() {	
@@ -39,6 +45,12 @@ public class MainWindow extends JPanel {
         removebtn = new JButton ("Remove");
         classselector = new JComboBox (classselectorItems);
         updatebtn = new JButton ("Update");
+        lstime = new JLabel ("Lesson time:");
+        lstimef = new JTextField (5);
+        lsname = new JLabel ("Lesson name:");
+        lsnamef = new JTextField (5);
+        tname = new JLabel ("Teacher name:");
+        tnamef = new JTextField (5);
 
         //adjust size and set layout
         setPreferredSize (new Dimension (484, 333));
@@ -52,15 +64,27 @@ public class MainWindow extends JPanel {
         add (addbtn);
         add (removebtn);
         add (classselector);
+        add (lstime);
+        add (lstimef);
+        add (lsname);
+        add (lsnamef);
+        add (tname);
+        add (tnamef);
 
         //set component bounds (only needed by Absolute Positioning)
         dayselectro.setBounds (10, 10, 310, 25);
-        updatebtn.setBounds (340, 215, 120, 25);
+        updatebtn.setBounds (340, 280, 120, 25);
         showlist.setBounds (10, 40, 315, 265);
         status.setBounds (0, 305, 325, 25);
-        addbtn.setBounds (340, 135, 120, 25);
-        removebtn.setBounds (340, 175, 120, 25);
+        addbtn.setBounds (340, 220, 120, 25);
+        removebtn.setBounds (340, 250, 120, 25);
         classselector.setBounds (335, 10, 100, 25);
+        lstime.setBounds (335, 40, 100, 25);
+        lstimef.setBounds (330, 65, 145, 25);
+        lsname.setBounds (330, 95, 100, 25);
+        lsnamef.setBounds (330, 120, 145, 25);
+        tname.setBounds (330, 150, 100, 25);
+        tnamef.setBounds (330, 175, 145, 25);
         //End of window building
         removebtn.addActionListener(new ActionListener() {
             @Override
@@ -105,15 +129,51 @@ public class MainWindow extends JPanel {
         addbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = new JFrame ("Lesson adding - "+ dayselectro.getSelectedItem()+" | "+classselector.getSelectedItem());
-                frame.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
-                frame.getContentPane().add (new AddWindow(dayselectroItems[dayselectro.getSelectedIndex()], classselectorItems[classselector.getSelectedIndex()], status,frame));
-                frame.pack();
-                frame.setVisible (true);
+            	status.setText("Adding new item...");
+                if(outFile.info.isEmpty()) {
+                	status.setText("Creating JSON map...");
+                	JSONObject obj = new JSONObject();
+                	obj.put("time", lstimef.getText());
+                	obj.put("lesson", lsnamef.getText());
+                	obj.put("teacher", tnamef.getText());
+                	obj.put("class", classselectorItems[classselector.getSelectedIndex()]);
+                	JSONArray arr = new JSONArray();
+                	arr.add(obj);
+                	outFile.info.put(dayselectroItems[dayselectro.getSelectedIndex()], arr);
+                	outFile.write();
+                	status.setText("Created map & added lesson");
+                	clearFields();
+                }else {
+                	status.setText("Creating item...");
+                	JSONObject obj = new JSONObject();
+                	obj.put("time", lstimef.getText());
+                	obj.put("lesson", lsnamef.getText());
+                	obj.put("teacher", tnamef.getText());
+                	obj.put("class", classselectorItems[classselector.getSelectedIndex()]);
+                	if(outFile.info.get(dayselectroItems[dayselectro.getSelectedIndex()])==null) {
+                		status.setText("Map for this day not found. Creating...");
+                		JSONArray arr = new JSONArray();
+                    	arr.add(obj);
+                    	outFile.info.put(dayselectroItems[dayselectro.getSelectedIndex()], arr);
+                    	outFile.write();
+                    	status.setText("Created item and day map.");
+                	}else {
+                		JSONArray arr = (JSONArray) outFile.info.get(dayselectroItems[dayselectro.getSelectedIndex()]);
+                		arr.add(obj);
+                    	outFile.write();
+                    	status.setText("Created item.");
+                	}
+                	clearFields();
+                }
                 updateList(dayselectroItems[dayselectro.getSelectedIndex()], classselectorItems[classselector.getSelectedIndex()]);
             }});
         updateList(dayselectroItems[dayselectro.getSelectedIndex()], classselectorItems[classselector.getSelectedIndex()]);
         
+    }
+    private void clearFields() {
+    	lstimef.setText("");
+    	lsnamef.setText("");
+    	tnamef.setText("");
     }
     public void updateList(String day,String classname) {
     	JSONArray dayarr = (JSONArray) outFile.info.get(day);
