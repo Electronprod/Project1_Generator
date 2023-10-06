@@ -10,15 +10,18 @@ import electron.data.outFile;
 import electron.data.settings;
 import electron.utils.messages;
 
+/**
+ * HTML generator class
+ */
 public class HTMLGenerator {
 	private static String[] day = {"Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday"};
 	
 	public static String generateIndex() {
 		if(htmlCheck() != true) {
 			messages.error("Preview files missing.");
-			return "";
+			return null;
 		}
-		//Подгружаем html из файлов
+		//Loading HTML template from file
 		String index = FileIteractor.getFileLine(new File("index.html"));
 		String gen="";
 		for(int i=0;i<settings.getListClasses().size();i++) {
@@ -30,8 +33,13 @@ public class HTMLGenerator {
 		index = index.replaceAll("null", "");
 		return index;
 	}
+	/**
+	 * Generates HTML table for class
+	 * @param classname - class
+	 * @return generated HTML
+	 */
 	private static String generateTable(String classname) {
-		//Шаблон таблицы
+		//Loading HTML template from file
 		String table = FileIteractor.getFileLine(new File("table.html"));
 		//Заменяем плейсхолдеры
 		table=table.replace("%classname%", classname);
@@ -45,6 +53,12 @@ public class HTMLGenerator {
 		return table;
 		
 	}
+	/**
+	 * Data parser
+	 * @param day - day
+	 * @param classname - class
+	 * @return
+	 */
 	private static String compile(String day,String classname) {
 		JSONArray arr = outFile.getLessonsForClass(outFile.getDay(day), classname);
 		if(arr==null) {
@@ -57,6 +71,12 @@ public class HTMLGenerator {
 		if(lessons==null) {return "<th>No data</th><th>No data</th><th>No data</th><th>No data</th>";}
 		return lessons;
 	}
+	/**
+	 * Data parser
+	 * @param lesson - lesson
+	 * @param num - number of lesson
+	 * @return
+	 */
 	private static String generateTableElement(JSONObject lesson,int num) {
 		String time = String.valueOf(lesson.get("time"));
 		String name = String.valueOf(lesson.get("lesson"));

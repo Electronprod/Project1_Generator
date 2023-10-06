@@ -6,7 +6,12 @@ import java.io.IOException;
 
 import electron.data.FileIteractor;
 
-public class PreviewServer {
+public class Preview {
+	/**
+	 * Open preview method
+	 * 
+	 * Creates HTML file and launching it.
+	 */
 	public static void showPreview() {
 		File showfile = new File("show.html");
 		FileIteractor.loadFile(showfile);

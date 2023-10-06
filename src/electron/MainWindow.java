@@ -3,21 +3,20 @@ package electron;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.locks.LockSupport;
-
 import javax.swing.*;
-import javax.swing.event.*;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import electron.data.outFile;
 import electron.data.settings;
-import electron.preview.PreviewServer;
-
+import electron.preview.Preview;
+/**
+ * Main window builder & handler
+ */
 public class MainWindow extends JPanel {
-    private JComboBox dayselectro;
+	//Defining window objects
+	private JComboBox dayselectro;
     private JList showlist;
     private JLabel status;
     private JButton addbtn;
@@ -32,10 +31,9 @@ public class MainWindow extends JPanel {
     private JTextField tnamef;
     
   //Window building
-    public MainWindow() {	
+	public MainWindow() {	
         //construct preComponents
         String[] dayselectroItems = {"Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday"};
-        String[] showlistItems = {"Nothing"};
         String[] classselectorItems = settings.getListClasses().toArray(new String[0]);
 
         //construct components
@@ -87,6 +85,10 @@ public class MainWindow extends JPanel {
         tname.setBounds (330, 150, 100, 25);
         tnamef.setBounds (330, 175, 145, 25);
         //End of window building
+        
+        //Window actions listeners
+        
+        //Remove action
         removebtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -111,23 +113,27 @@ public class MainWindow extends JPanel {
             	}
             	status.setText("Error removing: item not found.");
             }});
+        
+        //Preview action
         updatebtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                updateList(dayselectroItems[dayselectro.getSelectedIndex()], classselectorItems[classselector.getSelectedIndex()]);
-            	PreviewServer.showPreview();
-            	 status.setText("Showed preview");
+            	Preview.showPreview();
+            	status.setText("Showed preview");
             }});
+        //Update action for day selector
         dayselectro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateList(dayselectroItems[dayselectro.getSelectedIndex()], classselectorItems[classselector.getSelectedIndex()]);
             }});
+        //Update action for class selector
         classselector.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateList(dayselectroItems[dayselectro.getSelectedIndex()], classselectorItems[classselector.getSelectedIndex()]);
             }});
+        //Add lesson action
         addbtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -172,12 +178,20 @@ public class MainWindow extends JPanel {
         updateList(dayselectroItems[dayselectro.getSelectedIndex()], classselectorItems[classselector.getSelectedIndex()]);
         
     }
+	/**
+	 * Clear text fields from text
+	 */
     private void clearFields() {
     	lstimef.setText("");
     	lsnamef.setText("");
     	tnamef.setText("");
     }
-    public void updateList(String day,String classname) {
+    /**
+     * Updates the displayed information
+     * @param day - day
+     * @param classname - class name
+     */
+    private void updateList(String day,String classname) {
     	JSONArray dayarr = (JSONArray) outFile.info.get(day);
     	if(dayarr==null) {
     		String[] t = {"Nothing"};

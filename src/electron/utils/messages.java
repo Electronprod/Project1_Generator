@@ -5,8 +5,6 @@ import javax.swing.JOptionPane;
 
 /**
  * Methods for displaying information using dialog boxes
- * @version 1.0
- * @author Electron
  */
 public class messages {
 	/**

@@ -10,6 +10,9 @@ import electron.utils.messages;
 
 public class settings {
 	static File confFile = new File("settings.txt");
+	/**
+	 * Initialize settings file method
+	 */
 	public static void load() {
 		FileIteractor.loadFile(confFile);
 	    if (FileIteractor.getFileLines(confFile.getPath().toString()).isEmpty()) {
@@ -22,6 +25,10 @@ public class settings {
 	    	System.exit(0);
 	    }
 	}
+	/**
+	 * Get classes from settings
+	 * @return List<String> classes
+	 */
 	public static List<String> getListClasses(){
 		List<String> strs = FileIteractor.getFileLines(confFile.getPath());
 		Collections.sort(strs);
