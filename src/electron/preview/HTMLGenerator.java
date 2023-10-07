@@ -41,7 +41,7 @@ public class HTMLGenerator {
 	private static String generateTable(String classname) {
 		//Loading HTML template from file
 		String table = FileIteractor.getFileLine(new File("table.html"));
-		//Заменяем плейсхолдеры
+		//change placeholders
 		table=table.replace("%classname%", classname);
 		table=table.replace("%monday%", compile(day[0],classname));
 		table=table.replace("%tuesday%", compile(day[1],classname));
