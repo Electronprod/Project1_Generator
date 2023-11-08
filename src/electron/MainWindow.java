@@ -222,6 +222,7 @@ public class MainWindow extends JPanel {
 	/**
 	 * View changer
 	 * @param to - change to view false/true
+	 * false - lessons view; true - students view
 	 */
 	private void changeView(boolean to) {
 		//If lessons view
@@ -259,7 +260,7 @@ public class MainWindow extends JPanel {
 		repaint();
 	}
 	/**
-	 * Clear text fields from text
+	 * Clear text fields from text on lessons view
 	 */
     private void clearFields() {
     	lstimef.setText("");
@@ -267,7 +268,7 @@ public class MainWindow extends JPanel {
     	tnamef.setText("");
     }
     /**
-     * Updates the displayed information
+     * Updates the displayed information on lessons view
      * @param day - day
      * @param classname - class name
      */
@@ -292,13 +293,21 @@ public class MainWindow extends JPanel {
     	}
     	showlist.setListData(toShow.toArray());
     }
+    /**
+     * Load information for JTextArea in students view mode
+     * @param classname - name of class to load
+     */
     private void loadTextArea(String classname) {
     	if(outFile.info.get(classname)==null) {stviewtarea.setText("");return;}
     	stviewtarea.setText((String) outFile.info.get(classname));
     }
+    /**
+     * Save students from JTextArea in students view mode
+     * @param classname - name of class to save
+     */
     private void addStudents(String classname) {
     	outFile.info.put(classname, stviewtarea.getText());
     	outFile.write();
-    	status.setText("Added students to "+classname);
+    	status.setText("Saved students to "+classname);
     }
  }
